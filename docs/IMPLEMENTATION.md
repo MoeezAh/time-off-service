@@ -3,18 +3,8 @@
 ## Source Of Truth
 
 - Original assignment: Time-Off Microservice backend.
-- Required stack: NestJS and SQLite.
+- Required stack: NestJS, JavaScript and SQLite.
 - Evaluator email: solution must be developed using JavaScript.
-- Current interpretation: use NestJS runtime APIs from JavaScript files, without TypeScript or decorator syntax.
-
-## Current State
-
-- The application is now a JavaScript NestJS service, not Next.js.
-- `npm run dev` starts `src/main.js` directly.
-- TypeScript, Next.js, React, and related type tooling were removed from the package manifest.
-- NestJS packages were updated to latest available versions.
-- `sqlite3` is pinned to `5.1.7` because `sqlite3@6.0.1` produced `SQLITE_IOERR` on file-backed databases with Sequelize in this environment.
-- `sqlite3@5.1.7` has transitive audit findings in its native build toolchain; forcing npm's suggested fix installs the incompatible `sqlite3@6.0.1`.
 
 ## Completed Changes
 
