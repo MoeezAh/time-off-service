@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  # Main Time-Off Service
+  time-off-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: time-off-service
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: development
+      DATABASE_URL: sqlite://./data/time-off.db
+      HCM_BASE_URL: http://hcm-mock:3001
+      LOG_LEVEL: debug
+    volumes:
+      - ./data:/app/data
+      - ./src:/app/src
+    depends_on:
+      hcm-mock:
+        condition: service_healthy
+    networks:
+      - time-off-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  # Mock HCM Service
+  hcm-mock:
+    build:
+      context: .
+      dockerfile: src/integrations/hcm-mock/Dockerfile
+    container_name: hcm-mock
+    ports:
+      - "3001:3001"
+    environment:
+      NODE_ENV: development
+      PORT: 3001
+    networks:
+      - time-off-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+networks:
+  time-off-network:
+    driver: bridge
+
+volumes:
+  data:
